@@ -1,0 +1,3 @@
+const DAY_IN_SECONDS = 24 * 60 * 60
+export const WEEK_IN_SECONDS = 7 * DAY_IN_SECONDS
+export const MONTH_IN_SECONDS = 30 * DAY_IN_SECONDS

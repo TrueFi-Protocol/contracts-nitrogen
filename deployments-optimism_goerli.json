@@ -1,0 +1,44 @@
+{
+  "optimism_goerli": {
+    "indexedPortfoliosProtocolConfig": {
+      "txHash": "0x72e06842ea6b5c1fc78c61f628b25442b6b0cecdd79f9ee0bdb7795827acd56e",
+      "address": "0x65E58674375D7733bb04fF7a927676E4f15E50E0",
+      "multisig": false
+    },
+    "indexedPortfoliosProtocolConfig_proxy": {
+      "txHash": "0x039e833949439b8cef27971c6229d08fd12e800000348d08fe23798fba2a4600",
+      "address": "0x4cD9b8b787C0e0aC7C91a9375D6801b2bC6c3Df1",
+      "multisig": false
+    },
+    "vaultsRegistry": {
+      "txHash": "0x7b839b4f2f1eb6ecdadcfe40dbd0dddd1ff5887605e221b3a4da9a8ab7a82b2d",
+      "address": "0x1A110a055E26766734e3ba2093530C9bEfC20319",
+      "multisig": false
+    },
+    "vaultsRegistry_proxy": {
+      "txHash": "0x61f4f68f6959faf9797860c3a41b73c366ef45592348c7b7ddf230db36fe0ef3",
+      "address": "0xfC23EF2b626E912E1647c37f9a37194F826a0d30",
+      "multisig": false
+    },
+    "trancheVault": {
+      "txHash": "0x0e202c399411382a8190b2e224b856c677b40ccf2710dddc7b71e8714b7e2df9",
+      "address": "0x72aed715A84788012AA26F4267cbc392edfD41e8",
+      "multisig": false
+    },
+    "structuredIndexedPortfolio": {
+      "txHash": "0x3fe93309de51f0584849720b8f224d15455a063a2d2e107e8cbfdfda47db04dc",
+      "address": "0x063dae0262A9C43E7cd18163cdcB23c226d07CF7",
+      "multisig": false
+    },
+    "structuredIndexedPortfolioFactory": {
+      "txHash": "0x41a4422631cc4b66e5a3ff545608a0e074d4afef44f5f9aad01c7baf45bdd464",
+      "address": "0x7C6cd6Ba6d52202e90b3C2d4D95b8763c55710Ef",
+      "multisig": false
+    },
+    "managerRoleGranter": {
+      "txHash": "0xdf77d88b9f4e35ad91d62ca2a203b496b33c748781341b9c4da72623182e3cf2",
+      "address": "0xBa9B9EF83b0e24D6A8b0184104B02f1cF9C05b95",
+      "multisig": false
+    }
+  }
+}

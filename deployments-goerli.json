@@ -1,0 +1,44 @@
+{
+  "goerli": {
+    "indexedPortfoliosProtocolConfig": {
+      "txHash": "0x9ff8b0191dcb07da492f3a10bf2e5bb5a4c3fb3c960722ca40984f1433829bd5",
+      "address": "0x77332433804F415e835fCbAF1D51513c5E2a35F4",
+      "multisig": false
+    },
+    "indexedPortfoliosProtocolConfig_proxy": {
+      "txHash": "0xccfecb6bf6305b4b97a234acab8d3cace11d14bc4211700352d459be5c0496f5",
+      "address": "0x085d9E4bbfabaaB7A99df2097a0797A642406c2d",
+      "multisig": false
+    },
+    "vaultsRegistry": {
+      "txHash": "0x8a34c6dc98c51ada030052d04c1a5450cec99c6618b93b89a9e05d69ac0ab0f8",
+      "address": "0x60F011645Ce1419a0FCa3d832E13Ce19160834Cd",
+      "multisig": false
+    },
+    "vaultsRegistry_proxy": {
+      "txHash": "0x61fd8807ed86f4df8d4baa57fb3550abefed5a57c6d0863072412c9327036b2f",
+      "address": "0xdC30ff2F5De3f3bA1a0a40B9Be49cF566D688c2B",
+      "multisig": false
+    },
+    "trancheVault": {
+      "txHash": "0xb4c6fdd85f1e44f0c2be360b2695223181bf89aebd66cc1c9f07e7be3f48a684",
+      "address": "0xcefb8797EAF30158650C8b6F03A972Db74A81da2",
+      "multisig": false
+    },
+    "structuredIndexedPortfolio": {
+      "txHash": "0x785653cad5608edbbffd7a712fc5057bf09a38d01287a0dc32ac772c7850c3fc",
+      "address": "0xdab8975e0c37c597c50F2Ff0B7Eb5301ec29c150",
+      "multisig": false
+    },
+    "structuredIndexedPortfolioFactory": {
+      "txHash": "0x68c875f7ab8d457111ce4ad5e46d88ac6146b0d7c406614f8b16c1173d1040f3",
+      "address": "0x3050d0AE3b8489C86648BBc66024Ee08710cC1D3",
+      "multisig": false
+    },
+    "managerRoleGranter": {
+      "txHash": "0x7fc5ade436d8c4193eb2cd660f689305853de8b10dbed96089853318654f9e93",
+      "address": "0x0066E5cE62988a9cD8aEeDC5Ad8fE29F0C1489e7",
+      "multisig": false
+    }
+  }
+}

@@ -51,8 +51,6 @@ struct TrancheData {
     uint256 distributedAssets;
     /// @dev The potential maximum amount of tranche assets available for withdraw after close() was called
     uint256 maxValueOnClose;
-    /// @dev Checkpoint tracking how many assets should be returned to the tranche due to defaulted loans
-    InvestmentsDeficitCheckpoint investmentsDeficitCheckpoint;
 }
 
 struct PortfolioParams {

@@ -23,6 +23,7 @@ struct Checkpoint {
     uint256 protocolFeeRate;
     uint256 timestamp;
     uint256 unpaidFees;
+    uint256 deficit;
 }
 
 struct Configuration {
@@ -217,7 +218,7 @@ interface ITrancheVault is IERC4626Upgradeable, IERC165 {
      *      - is used by StructuredPortfolio only in Live portfolio status
      * @param _totalAssets Total assets amount to save in the checkpoint
      */
-    function updateCheckpointFromPortfolio(uint256 _totalAssets, uint256 deficit) external;
+    function updateCheckpointFromPortfolio(uint256 _totalAssets) external;
 
     /**
      * @return assets Total tranche assets including accrued but yet not paid fees

@@ -143,8 +143,6 @@ describe('StructuredIndexedPortfolio.initialize', () => {
       expect(contractTrancheData.targetApy).to.eq(tranchesInitData[i].targetApy)
       expect(contractTrancheData.distributedAssets).to.eq(0)
       expect(contractTrancheData.maxValueOnClose).to.eq(0)
-      expect(contractTrancheData.investmentsDeficitCheckpoint.deficit).to.eq(0)
-      expect(contractTrancheData.investmentsDeficitCheckpoint.timestamp).to.eq(0)
     }
   })
 })

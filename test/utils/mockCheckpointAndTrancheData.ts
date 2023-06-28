@@ -24,10 +24,6 @@ export async function mockCheckpointAndTrancheData(vault: MockTrancheVault, port
     maxValueOnClose: data?.maxValueOnClose ?? 0,
     minSubordinateRatio: data?.minSubordinateRatio ?? 0,
     targetApy: data?.targetApy ?? 0,
-    investmentsDeficitCheckpoint: {
-      deficit: data?.deficit ?? 0,
-      timestamp: data?.investmentTimestamp ?? 0,
-    },
   }
 
   const mockCheckpoint: AwaitedValueObject<CheckpointStruct> = {
@@ -35,6 +31,7 @@ export async function mockCheckpointAndTrancheData(vault: MockTrancheVault, port
     timestamp: data?.vaultTimestamp ?? 0,
     totalAssets: data?.totalAssets ?? 0,
     unpaidFees: data?.unpaidFees ?? 0,
+    deficit: data?.deficit ?? 0,
   }
 
   await vault.setCheckpoint(mockCheckpoint)

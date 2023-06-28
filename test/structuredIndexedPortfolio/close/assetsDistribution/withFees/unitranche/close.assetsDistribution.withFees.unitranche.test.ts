@@ -26,7 +26,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.withFees.unitranch
     expect(trancheData.maxValueOnClose).to.eq(Zero)
     expect(trancheData.distributedAssets).to.eq(Zero)
     expect(await token.balanceOf(tranche.address)).to.eq(Zero)
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero, Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero])
   })
 
   describe('with deposits', () => {
@@ -55,7 +55,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.withFees.unitranch
       expect(trancheData.maxValueOnClose).to.eq(Zero)
       expect(trancheData.distributedAssets).to.eq(remainingAssetsAfterFees)
       expect(await token.balanceOf(tranche.address)).to.eq(remainingAssetsAfterFees)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [remainingAssetsAfterFees, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [remainingAssetsAfterFees])
     })
 
     it('value increased', async () => {
@@ -83,7 +83,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.withFees.unitranch
       expect(trancheData.maxValueOnClose).to.eq(Zero)
       expect(trancheData.distributedAssets).to.eq(totalAssetsAfterFees)
       expect(await token.balanceOf(tranche.address)).to.eq(totalAssetsAfterFees)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [totalAssetsAfterFees, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [totalAssetsAfterFees])
     })
 
     it('fee bigger than value', async () => {
@@ -103,7 +103,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.withFees.unitranch
       expect(trancheData.maxValueOnClose).to.eq(Zero)
       expect(trancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(tranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero])
     })
   })
 })

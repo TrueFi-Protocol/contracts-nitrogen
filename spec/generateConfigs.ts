@@ -40,7 +40,7 @@ function generateConfigs() {
         writeFileSync(`${generatedConfigsDir}/${newConfigName}`, JSON.stringify({
           ...config,
           files: [...config.files, token + ':MockToken'],
-          verify: [spec],
+          verify: spec,
           expected_file: `${expectedDir}/${expectedFileName}`,
           cache: `nitrogen_${branchName}_${newConfigName}`,
         }))

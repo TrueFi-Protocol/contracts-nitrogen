@@ -23,7 +23,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.unitranche'
     expect(trancheData.maxValueOnClose).to.eq(Zero)
     expect(trancheData.distributedAssets).to.eq(Zero)
     expect(await token.balanceOf(tranche.address)).to.eq(Zero)
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero, Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero])
   })
 
   describe('with deposits', () => {
@@ -50,7 +50,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.unitranche'
       expect(trancheData.maxValueOnClose).to.eq(Zero)
       expect(trancheData.distributedAssets).to.eq(remainingAssets)
       expect(await token.balanceOf(tranche.address)).to.eq(remainingAssets)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [remainingAssets, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [remainingAssets])
     })
 
     it('value increased', async () => {
@@ -76,7 +76,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.unitranche'
       expect(trancheData.maxValueOnClose).to.eq(Zero)
       expect(trancheData.distributedAssets).to.eq(totalAssets)
       expect(await token.balanceOf(tranche.address)).to.eq(totalAssets)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [totalAssets, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [totalAssets])
     })
   })
 })

@@ -1,7 +1,7 @@
-import "../Shared.spec"
+import "../Shared.spec";
 
 methods {
-    getValue() returns uint256 envfree
+    function getVaultsList() external returns (address[]) envfree;
 }
 
 // RULES

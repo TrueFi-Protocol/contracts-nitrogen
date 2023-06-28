@@ -1,4 +1,3 @@
-import { Zero } from '@ethersproject/constants'
 import { expect, use } from 'chai'
 import { solidity } from 'ethereum-waffle'
 import { describe, it } from 'mocha'
@@ -6,7 +5,7 @@ import { describe, it } from 'mocha'
 import { MockERC4626Vault__factory } from 'build/types'
 import { structuredIndexedPortfolioFixture, StructuredIndexedPortfolioStatus } from 'fixtures/structuredIndexedPortfolioFixture'
 import { setupFixtureLoader } from 'test/setup'
-import { createAndRegisterInvestment, getDeficitCheckpoints, getHalfPortfolioDuration, getPortfolioDuration, getTxTimestamp, setNextBlockTimestamp, startAndGetTimestamp, startAndTimeTravelPastEndDate, startTimeTravelAndClosePortfolio, sumArray, timeTravelTo } from 'utils'
+import { createAndRegisterInvestment, getHalfPortfolioDuration, getPortfolioDuration, getTxTimestamp, setNextBlockTimestamp, startAndGetTimestamp, startAndTimeTravelPastEndDate, startTimeTravelAndClosePortfolio, sumArray, timeTravelTo } from 'utils'
 import { depositAndCalculateAssumedTranchesValue } from 'fixtures/utils'
 
 use(solidity)
@@ -31,7 +30,7 @@ describe('StructuredIndexedPortfolio.close.live', () => {
   })
 
   it('sets deficit checkpoint timestamp', async () => {
-    const { portfolio } = await loadFixture(structuredIndexedPortfolioFixture)
+    const { portfolio, tranches: [equityTranche, juniorTranche, seniorTranche] } = await loadFixture(structuredIndexedPortfolioFixture)
     const halfPortfolioDuration = await getHalfPortfolioDuration(portfolio)
 
     const startTimestamp = await startAndGetTimestamp(portfolio)
@@ -40,8 +39,10 @@ describe('StructuredIndexedPortfolio.close.live', () => {
     await setNextBlockTimestamp(expectedTimestamp)
     await portfolio.close()
 
-    const [equityCheckpoint, juniorCheckpoint, seniorCheckpoint] = await getDeficitCheckpoints(portfolio)
-    expect(equityCheckpoint.timestamp).to.eq(Zero)
+    const equityCheckpoint = await equityTranche.getCheckpoint()
+    const juniorCheckpoint = await juniorTranche.getCheckpoint()
+    const seniorCheckpoint = await seniorTranche.getCheckpoint()
+    expect(equityCheckpoint.timestamp).to.eq(expectedTimestamp)
     expect(juniorCheckpoint.timestamp).to.eq(expectedTimestamp)
     expect(seniorCheckpoint.timestamp).to.eq(expectedTimestamp)
   })
@@ -60,9 +61,9 @@ describe('StructuredIndexedPortfolio.close.live', () => {
 
     await startTimeTravelAndClosePortfolio(portfolio)
 
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[0], [assumedEquityTrancheValue, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[1], [assumedJuniorTrancheValue, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[2], [assumedSeniorTrancheValue, Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[0], [assumedEquityTrancheValue])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[1], [assumedJuniorTrancheValue])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[2], [assumedSeniorTrancheValue])
   })
 
   it('emits event', async () => {

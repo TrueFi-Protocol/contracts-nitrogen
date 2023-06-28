@@ -50,7 +50,7 @@ contract StructuredIndexedPortfolioTest is StructuredIndexedPortfolio {
 
     function updateCheckpointsFromPortfolio(uint256[] memory newTotalAssets) external {
         for (uint256 i = 0; i < tranches.length; i++) {
-            tranches[i].updateCheckpointFromPortfolio(newTotalAssets[i], 0);
+            tranches[i].updateCheckpointFromPortfolio(newTotalAssets[i]);
         }
     }
 

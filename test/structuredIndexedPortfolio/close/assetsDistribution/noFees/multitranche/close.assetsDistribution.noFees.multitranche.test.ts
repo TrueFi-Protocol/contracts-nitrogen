@@ -34,7 +34,7 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.multitranch
       expect(trancheData.maxValueOnClose).to.eq(Zero)
       expect(trancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(tranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranche, [Zero])
     }
   })
 
@@ -65,21 +65,21 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.multitranch
       expect(equityTrancheData.maxValueOnClose).to.eq(Zero)
       expect(equityTrancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(equityTranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero])
 
       const juniorTrancheData = tranchesData[1]
       const juniorTranche = tranches[1]
       expect(juniorTrancheData.maxValueOnClose).to.eq(expectedJuniorTrancheValue)
       expect(juniorTrancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(juniorTranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero, expectedJuniorTrancheValue])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero])
 
       const seniorTrancheData = tranchesData[2]
       const seniorTranche = tranches[2]
       expect(seniorTrancheData.maxValueOnClose).to.eq(expectedSeniorTrancheValue)
       expect(seniorTrancheData.distributedAssets).to.eq(expectedSeniorDistributedAssets)
       expect(await token.balanceOf(seniorTranche.address)).to.eq(expectedSeniorDistributedAssets)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorDistributedAssets, seniorUnderflow])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorDistributedAssets])
     })
 
     it('senior full, junior empty, equity empty', async () => {
@@ -106,21 +106,21 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.multitranch
       expect(equityTrancheData.maxValueOnClose).to.eq(Zero)
       expect(equityTrancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(equityTranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero])
 
       const juniorTrancheData = tranchesData[1]
       const juniorTranche = tranches[1]
       expect(juniorTrancheData.maxValueOnClose).to.eq(expectedJuniorTrancheValue)
       expect(juniorTrancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(juniorTranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero, expectedJuniorTrancheValue])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero])
 
       const seniorTrancheData = tranchesData[2]
       const seniorTranche = tranches[2]
       expect(seniorTrancheData.maxValueOnClose).to.eq(expectedSeniorTrancheValue)
       expect(seniorTrancheData.distributedAssets).to.eq(expectedSeniorTrancheValue)
       expect(await token.balanceOf(seniorTranche.address)).to.eq(expectedSeniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue])
     })
 
     it('senior full, junior underflow, equity empty', async () => {
@@ -149,21 +149,21 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.multitranch
       expect(equityTrancheData.maxValueOnClose).to.eq(Zero)
       expect(equityTrancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(equityTranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero])
 
       const juniorTrancheData = tranchesData[1]
       const juniorTranche = tranches[1]
       expect(juniorTrancheData.maxValueOnClose).to.eq(expectedJuniorTrancheValue)
       expect(juniorTrancheData.distributedAssets).to.eq(expectedJuniorDistributedAssets)
       expect(await token.balanceOf(juniorTranche.address)).to.eq(expectedJuniorDistributedAssets)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorDistributedAssets, juniorUnderflow])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorDistributedAssets])
 
       const seniorTrancheData = tranchesData[2]
       const seniorTranche = tranches[2]
       expect(seniorTrancheData.maxValueOnClose).to.eq(expectedSeniorTrancheValue)
       expect(seniorTrancheData.distributedAssets).to.eq(expectedSeniorTrancheValue)
       expect(await token.balanceOf(seniorTranche.address)).to.eq(expectedSeniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue])
     })
 
     it('senior full, junior full, equity empty', async () => {
@@ -190,21 +190,21 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.multitranch
       expect(equityTrancheData.maxValueOnClose).to.eq(Zero)
       expect(equityTrancheData.distributedAssets).to.eq(Zero)
       expect(await token.balanceOf(equityTranche.address)).to.eq(Zero)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero])
 
       const juniorTrancheData = tranchesData[1]
       const juniorTranche = tranches[1]
       expect(juniorTrancheData.maxValueOnClose).to.eq(expectedJuniorTrancheValue)
       expect(juniorTrancheData.distributedAssets).to.eq(expectedJuniorTrancheValue)
       expect(await token.balanceOf(juniorTranche.address)).to.eq(expectedJuniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorTrancheValue])
 
       const seniorTrancheData = tranchesData[2]
       const seniorTranche = tranches[2]
       expect(seniorTrancheData.maxValueOnClose).to.eq(expectedSeniorTrancheValue)
       expect(seniorTrancheData.distributedAssets).to.eq(expectedSeniorTrancheValue)
       expect(await token.balanceOf(seniorTranche.address)).to.eq(expectedSeniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue])
     })
 
     it('senior full, junior full, equity loses value', async () => {
@@ -227,21 +227,21 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.multitranch
       expect(equityTrancheData.maxValueOnClose).to.eq(Zero)
       expect(equityTrancheData.distributedAssets).to.eq(expectedEquityDistributedAssets)
       expect(await token.balanceOf(equityTranche.address)).to.eq(expectedEquityDistributedAssets)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [expectedEquityDistributedAssets, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [expectedEquityDistributedAssets])
 
       const juniorTrancheData = tranchesData[1]
       const juniorTranche = tranches[1]
       expect(juniorTrancheData.maxValueOnClose).to.eq(expectedJuniorTrancheValue)
       expect(juniorTrancheData.distributedAssets).to.eq(expectedJuniorTrancheValue)
       expect(await token.balanceOf(juniorTranche.address)).to.eq(expectedJuniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorTrancheValue])
 
       const seniorTrancheData = tranchesData[2]
       const seniorTranche = tranches[2]
       expect(seniorTrancheData.maxValueOnClose).to.eq(expectedSeniorTrancheValue)
       expect(seniorTrancheData.distributedAssets).to.eq(expectedSeniorTrancheValue)
       expect(await token.balanceOf(seniorTranche.address)).to.eq(expectedSeniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue])
     })
 
     it('senior full, junior full, equity gains value', async () => {
@@ -269,21 +269,21 @@ describe('StructuredIndexedPortfolio.close.assetsDistribution.noFees.multitranch
       expect(equityTrancheData.maxValueOnClose).to.eq(Zero)
       expect(equityTrancheData.distributedAssets).to.eq(expectedEquityDistributedAssets)
       expect(await token.balanceOf(equityTranche.address)).to.eq(expectedEquityDistributedAssets)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [expectedEquityDistributedAssets, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [expectedEquityDistributedAssets])
 
       const juniorTrancheData = tranchesData[1]
       const juniorTranche = tranches[1]
       expect(juniorTrancheData.maxValueOnClose).to.eq(expectedJuniorTrancheValue)
       expect(juniorTrancheData.distributedAssets).to.eq(expectedJuniorTrancheValue)
       expect(await token.balanceOf(juniorTranche.address)).to.eq(expectedJuniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [expectedJuniorTrancheValue])
 
       const seniorTrancheData = tranchesData[2]
       const seniorTranche = tranches[2]
       expect(seniorTrancheData.maxValueOnClose).to.eq(expectedSeniorTrancheValue)
       expect(seniorTrancheData.distributedAssets).to.eq(expectedSeniorTrancheValue)
       expect(await token.balanceOf(seniorTranche.address)).to.eq(expectedSeniorTrancheValue)
-      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue, Zero])
+      expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [expectedSeniorTrancheValue])
     })
   })
 })

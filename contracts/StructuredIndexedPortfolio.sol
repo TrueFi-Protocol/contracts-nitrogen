@@ -16,7 +16,7 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import {EnumerableSetUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
 
-import {IStructuredIndexedPortfolio, PortfolioParams, TrancheInitData, TrancheData, ExpectedEquityRate, InvestmentsDeficitCheckpoint, PortfolioStatus, BASIS_PRECISION, YEAR} from "./interfaces/IStructuredIndexedPortfolio.sol";
+import {IStructuredIndexedPortfolio, PortfolioParams, TrancheInitData, TrancheData, ExpectedEquityRate, PortfolioStatus, BASIS_PRECISION, YEAR} from "./interfaces/IStructuredIndexedPortfolio.sol";
 import {ITrancheVault, Checkpoint} from "./interfaces/ITrancheVault.sol";
 import {IProtocolConfig} from "./interfaces/IProtocolConfig.sol";
 import {IVaultsRegistry} from "./interfaces/IVaultsRegistry.sol";
@@ -78,15 +78,13 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
         require(tranchesInitData[0].targetApy == 0, "SIP: Target APY in tranche #0 must be 0");
         require(tranchesInitData[0].minSubordinateRatio == 0, "SIP: Min sub ratio in tranche #0 must be 0");
 
-        InvestmentsDeficitCheckpoint memory emptyInvestmentsDeficitCheckpoint = InvestmentsDeficitCheckpoint(0, 0);
-
         for (uint256 i = 0; i < tranchesCount; i++) {
             require(address(asset) == address(tranchesInitData[i].tranche.asset()), "SIP: Asset mismatched");
             TrancheInitData memory initData = tranchesInitData[i];
             tranches.push(initData.tranche);
             initData.tranche.setPortfolio(address(this));
             asset.safeApprove(address(initData.tranche), type(uint256).max);
-            tranchesData.push(TrancheData(initData.targetApy, initData.minSubordinateRatio, 0, 0, emptyInvestmentsDeficitCheckpoint));
+            tranchesData.push(TrancheData(initData.targetApy, initData.minSubordinateRatio, 0, 0));
         }
     }
 
@@ -101,34 +99,22 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
     //slither-disable-next-line reentrancy-no-eth
     function updateCheckpoints() public whenNotPaused {
         require(status != PortfolioStatus.CapitalFormation, "SIP: No checkpoints before start");
-        (uint256[] memory _totalAssetsAfter, uint256[] memory pendingFees) = _calculateWaterfall(
-            virtualTokenBalance + investmentsValue()
-        );
-        InvestmentsDeficitCheckpoint[] memory deficits = _calculateInvestmentsDeficit(_totalAssetsAfter, pendingFees);
+        uint256[] memory _totalAssetsAfter = calculateWaterfall();
         for (uint256 i = 0; i < _totalAssetsAfter.length; i++) {
-            tranches[i].updateCheckpointFromPortfolio(_totalAssetsAfter[i], deficits[i].deficit);
-        }
-        for (uint256 i = 1; i < deficits.length; i++) {
-            tranchesData[i].investmentsDeficitCheckpoint = deficits[i];
+            tranches[i].updateCheckpointFromPortfolio(_totalAssetsAfter[i]);
         }
     }
 
-    function _calculateInvestmentsDeficit(uint256[] memory realTotalAssets, uint256[] memory pendingFees)
-        internal
-        view
-        returns (InvestmentsDeficitCheckpoint[] memory)
-    {
+    function calculateDeficit(
+        uint256 i,
+        uint256 realTotalAssets,
+        uint256 pendingFees,
+        uint256 unpaidFees
+    ) external view returns (uint256) {
         uint256 timestamp = _limitedBlockTimestamp();
-        InvestmentsDeficitCheckpoint[] memory deficits = new InvestmentsDeficitCheckpoint[](realTotalAssets.length);
-        for (uint256 i = 1; i < realTotalAssets.length; i++) {
-            Checkpoint memory checkpoint = tranches[i].getCheckpoint();
-            uint256 assumedTotalAssets = _assumedTrancheValue(i, timestamp);
-            uint256 assumedTotalAssetsAfterFees = _saturatingSub(assumedTotalAssets, _max(pendingFees[i], checkpoint.unpaidFees));
-
-            uint256 newDeficit = _saturatingSub(assumedTotalAssetsAfterFees, realTotalAssets[i]);
-            deficits[i] = InvestmentsDeficitCheckpoint({deficit: newDeficit, timestamp: timestamp});
-        }
-        return deficits;
+        uint256 assumedTotalAssets = _assumedTrancheValue(i, timestamp);
+        uint256 assumedTotalAssetsAfterFees = _saturatingSub(assumedTotalAssets, _max(pendingFees, unpaidFees));
+        return _saturatingSub(assumedTotalAssetsAfterFees, realTotalAssets);
     }
 
     function increaseVirtualTokenBalance(uint256 increment) external {
@@ -140,19 +126,16 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
     }
 
     function calculateWaterfall() public view returns (uint256[] memory) {
-        (uint256[] memory waterfall, ) = _calculateWaterfall(virtualTokenBalance + investmentsValue());
-        return waterfall;
+        return _calculateWaterfall(virtualTokenBalance + investmentsValue());
     }
 
-    function _calculateWaterfall(uint256 assetsLeft) internal view returns (uint256[] memory, uint256[] memory) {
+    function _calculateWaterfall(uint256 assetsLeft) internal view returns (uint256[] memory) {
         uint256[] memory waterfall = _calculateWaterfallWithoutFees(assetsLeft);
-        uint256[] memory fees = new uint256[](tranches.length);
         for (uint256 i = 0; i < waterfall.length; i++) {
             uint256 pendingFees = tranches[i].totalPendingFeesForAssets(waterfall[i]);
             waterfall[i] = _saturatingSub(waterfall[i], pendingFees);
-            fees[i] = pendingFees;
         }
-        return (waterfall, fees);
+        return waterfall;
     }
 
     function calculateWaterfallWithoutFees() public view returns (uint256[] memory) {
@@ -266,7 +249,7 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
     function _closeTranches() internal {
         updateCheckpoints();
         uint256 limitedBlockTimestamp = _limitedBlockTimestamp();
-        (uint256[] memory waterfall, ) = _calculateWaterfall(virtualTokenBalance);
+        uint256[] memory waterfall = _calculateWaterfall(virtualTokenBalance);
 
         for (uint256 i = 0; i < waterfall.length; i++) {
             if (i != 0) {
@@ -340,6 +323,8 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
 
         uint256[] memory trancheValues = calculateWaterfall();
         uint256 tranchesCount = trancheValues.length;
+
+        //slither-disable-next-line incorrect-equality
         if (trancheIdx == tranchesCount - 1) {
             return 0;
         }
@@ -412,19 +397,11 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
     function _assumedTrancheValue(uint256 trancheIdx, uint256 timestamp) internal view returns (uint256) {
         Checkpoint memory checkpoint = tranches[trancheIdx].getCheckpoint();
         TrancheData memory trancheData = tranchesData[trancheIdx];
-
-        uint256 targetApy = trancheData.targetApy;
         uint256 timePassedSinceCheckpoint = _saturatingSub(timestamp, checkpoint.timestamp);
 
-        uint256 assumedTotalAssets = _withInterest(checkpoint.totalAssets, targetApy, timePassedSinceCheckpoint) +
+        return
+            _withInterest(checkpoint.totalAssets + checkpoint.deficit, trancheData.targetApy, timePassedSinceCheckpoint) +
             checkpoint.unpaidFees;
-        uint256 defaultedInvestmentsDeficit = trancheData.investmentsDeficitCheckpoint.deficit;
-
-        if (defaultedInvestmentsDeficit != 0) {
-            defaultedInvestmentsDeficit = _withInterest(defaultedInvestmentsDeficit, targetApy, timePassedSinceCheckpoint);
-        }
-
-        return assumedTotalAssets + defaultedInvestmentsDeficit;
     }
 
     function _withInterest(

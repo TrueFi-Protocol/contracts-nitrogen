@@ -5,7 +5,7 @@ import { describe, it } from 'mocha'
 
 import { structuredIndexedPortfolioFixture, StructuredIndexedPortfolioStatus } from 'fixtures/structuredIndexedPortfolioFixture'
 import { setupFixtureLoader } from 'test/setup'
-import { getDeficitCheckpoints, timeTravelTo } from 'utils'
+import { getTxTimestamp, timeTravelTo } from 'utils'
 
 use(solidity)
 
@@ -35,14 +35,17 @@ describe('StructuredIndexedPortfolio.close.capitalFormation', () => {
   })
 
   it('does not set deficit checkpoint timestamp', async () => {
-    const { portfolio } = await loadFixture(structuredIndexedPortfolioFixture)
+    const { portfolio, tranches: [equityTranche, juniorTranche, seniorTranche] } = await loadFixture(structuredIndexedPortfolioFixture)
 
-    await portfolio.close()
+    const tx = await portfolio.close()
+    const expectedTimestamp = await getTxTimestamp(tx)
 
-    const [equityCheckpoint, juniorCheckpoint, seniorCheckpoint] = await getDeficitCheckpoints(portfolio)
-    expect(equityCheckpoint.timestamp).to.eq(Zero)
-    expect(juniorCheckpoint.timestamp).to.eq(Zero)
-    expect(seniorCheckpoint.timestamp).to.eq(Zero)
+    const equityCheckpoint = await equityTranche.getCheckpoint()
+    const juniorCheckpoint = await juniorTranche.getCheckpoint()
+    const seniorCheckpoint = await seniorTranche.getCheckpoint()
+    expect(equityCheckpoint.timestamp).to.eq(expectedTimestamp)
+    expect(juniorCheckpoint.timestamp).to.eq(expectedTimestamp)
+    expect(seniorCheckpoint.timestamp).to.eq(expectedTimestamp)
   })
 
   it('calls updateCheckpointFromPortfolio', async () => {
@@ -55,9 +58,9 @@ describe('StructuredIndexedPortfolio.close.capitalFormation', () => {
 
     await portfolio.close()
 
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[0], [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[1], [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[2], [Zero, Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[0], [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[1], [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(tranches[2], [Zero])
   })
 
   it('emits event', async () => {

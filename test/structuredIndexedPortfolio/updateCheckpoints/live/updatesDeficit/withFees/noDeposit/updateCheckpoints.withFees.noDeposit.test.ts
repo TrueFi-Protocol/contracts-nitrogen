@@ -6,7 +6,6 @@ import { setupFixtureLoader } from 'test/setup'
 import {
   getHalfPortfolioDuration,
   setNextBlockTimestamp,
-  getDeficitCheckpoints,
   setTranchesAndProtocolFeeRates,
   startAndGetTimestamp,
   subtractFees,
@@ -43,10 +42,12 @@ describe('StructuredIndexedPortfolio.updateCheckpoints.withFees.noDeposit', () =
     await portfolio.start()
     await portfolio.updateCheckpoints()
 
-    const [equityCheckpoint, juniorCheckpoint, seniorCheckpoint] = await getDeficitCheckpoints(portfolio)
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero, Zero])
+    const equityCheckpoint = await equityTranche.getCheckpoint()
+    const juniorCheckpoint = await juniorTranche.getCheckpoint()
+    const seniorCheckpoint = await seniorTranche.getCheckpoint()
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero])
     expect(equityCheckpoint.deficit).to.eq(Zero)
     expect(juniorCheckpoint.deficit).to.eq(Zero)
     expect(seniorCheckpoint.deficit).to.eq(Zero)
@@ -62,10 +63,12 @@ describe('StructuredIndexedPortfolio.updateCheckpoints.withFees.noDeposit', () =
     await setNextBlockTimestamp(startTimestamp + halfPortfolioDuration)
     await portfolio.updateCheckpoints()
 
-    const [equityCheckpoint, juniorCheckpoint, seniorCheckpoint] = await getDeficitCheckpoints(portfolio)
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero, Zero])
+    const equityCheckpoint = await equityTranche.getCheckpoint()
+    const juniorCheckpoint = await juniorTranche.getCheckpoint()
+    const seniorCheckpoint = await seniorTranche.getCheckpoint()
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero])
     expect(equityCheckpoint.deficit).to.eq(Zero)
     expect(juniorCheckpoint.deficit).to.eq(Zero)
     expect(seniorCheckpoint.deficit).to.eq(Zero)
@@ -85,10 +88,12 @@ describe('StructuredIndexedPortfolio.updateCheckpoints.withFees.noDeposit', () =
     await portfolio.updateCheckpoints()
 
     const expectedEquityValue = subtractFees(virtualTokenBalance, halfPortfolioDuration, DEFAULT_PROTOCOL_FEE_RATE, EQUITY_FEE_RATE)
-    const [equityCheckpoint, juniorCheckpoint, seniorCheckpoint] = await getDeficitCheckpoints(portfolio)
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [expectedEquityValue, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero, Zero])
+    const equityCheckpoint = await equityTranche.getCheckpoint()
+    const juniorCheckpoint = await juniorTranche.getCheckpoint()
+    const seniorCheckpoint = await seniorTranche.getCheckpoint()
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [expectedEquityValue])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero])
     expect(equityCheckpoint.deficit).to.eq(Zero)
     expect(juniorCheckpoint.deficit).to.eq(Zero)
     expect(seniorCheckpoint.deficit).to.eq(Zero)
@@ -107,10 +112,12 @@ describe('StructuredIndexedPortfolio.updateCheckpoints.withFees.noDeposit', () =
     await portfolio.updateCheckpoints()
     await portfolio.updateCheckpoints()
 
-    const [equityCheckpoint, juniorCheckpoint, seniorCheckpoint] = await getDeficitCheckpoints(portfolio)
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero, Zero])
-    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero, Zero])
+    const equityCheckpoint = await equityTranche.getCheckpoint()
+    const juniorCheckpoint = await juniorTranche.getCheckpoint()
+    const seniorCheckpoint = await seniorTranche.getCheckpoint()
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(equityTranche, [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(juniorTranche, [Zero])
+    expect('updateCheckpointFromPortfolio').to.be.calledOnContractWith(seniorTranche, [Zero])
     expect(equityCheckpoint.deficit).to.eq(Zero)
     expect(juniorCheckpoint.deficit).to.eq(Zero)
     expect(seniorCheckpoint.deficit).to.eq(Zero)

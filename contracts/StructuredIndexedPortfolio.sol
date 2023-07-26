@@ -181,11 +181,6 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
     }
 
     function totalAssets() external view returns (uint256) {
-        if (status == PortfolioStatus.Live) {
-            uint256 _totalPendingFees = totalPendingFees();
-            uint256 totalAssetsBeforeFees = virtualTokenBalance + investmentsValue();
-            return _saturatingSub(totalAssetsBeforeFees, _totalPendingFees);
-        }
         return _sum(_tranchesTotalAssets());
     }
 

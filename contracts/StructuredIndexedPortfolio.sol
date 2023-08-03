@@ -180,13 +180,19 @@ contract StructuredIndexedPortfolio is IStructuredIndexedPortfolio, Upgradeable 
         return calculateWaterfallWithoutFees()[trancheIdx];
     }
 
-    function totalAssets() external view returns (uint256) {
+    function totalAssets() public view returns (uint256) {
         return _sum(_tranchesTotalAssets());
     }
 
     function liquidAssets() public view returns (uint256) {
-        uint256 _totalPendingFees = totalPendingFees();
-        return _saturatingSub(virtualTokenBalance, _totalPendingFees);
+        if (status != PortfolioStatus.Live) {
+            return 0;
+        }
+        return _saturatingSub(virtualTokenBalance, _totalPayableFees());
+    }
+
+    function _totalPayableFees() internal view returns (uint256) {
+        return virtualTokenBalance + investmentsValue() - totalAssets();
     }
 
     function totalPendingFees() public view returns (uint256) {
